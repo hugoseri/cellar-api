@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 
 import { CellarController } from './cellar.controller';
 import { CellarService } from './cellar.service';
-import { Cellar } from './cellar';
+import { Cellar } from './Cellar';
 
 @Module({
   imports: [],

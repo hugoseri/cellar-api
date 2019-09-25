@@ -1,4 +1,4 @@
-import { Bottle } from './bottle';
+import { Bottle } from './Bottle';
 
 interface TotalPrice {
   toEuro: () => number;

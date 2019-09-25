@@ -1,5 +1,7 @@
 import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { CellarService } from './cellar.service';
+import { Cellar } from './Cellar';
+import { Bottle } from './Bottle';
 
 interface cellarDTO {
   name: string;
@@ -10,33 +12,43 @@ interface bottleDTO {
   price: number;
 }
 
+interface simpleCellar {
+  name: string;
+  id: string;
+}
+
 @Controller('cellars')
 export class CellarController {
   constructor(private readonly cellarService: CellarService) {
   }
 
   @Get()
-  getAllCellars() {
-    return this.cellarService.getAllCellars();
+  async getAllCellars(): Promise<Cellar[]> {
+    let allCellars = await this.cellarService.getAllCellars();
+    return allCellars;
   }
 
   @Get(':id')
-  getCellarById(@Param('id') id:string){
-    return this.cellarService.getCellarById(id);
+  async getCellarById(@Param('id') id:string): Promise<Cellar> {
+    let cellar = await this.cellarService.getCellarById(id);
+    return cellar;
   }
 
   @Post()
-  CreateCellar(@Body() cellarName: cellarDTO) {
-    return this.cellarService.createCellar(cellarName.name);
+  async CreateCellar(@Body() cellarName: cellarDTO): Promise<simpleCellar> {
+    let cellar = await this.cellarService.createCellar(cellarName.name);
+    return cellar;
   }
 
   @Post(':id/bottles')
-  CreateBottle(@Param('id') id: string, @Body() bottle: bottleDTO){
-    return this.cellarService.createBottle(id, bottle.name, bottle.price);
+  async CreateBottle(@Param('id') id: string, @Body() bottle: bottleDTO): Promise<bottleDTO> {
+    let bottleCreated = await this.cellarService.createBottle(id, bottle.name, bottle.price);
+    return bottleCreated;
   }
 
   @Get(':id/bottles')
-  getAllBottles(@Param('id') id:string){
-    return this.cellarService.getAllBottlesFromCellarId(id);
+  async getAllBottles(@Param('id') id:string): Promise<Bottle[]> {
+    let allBottles = await this.cellarService.getAllBottlesFromCellarId(id);
+    return allBottles;
   }
 }

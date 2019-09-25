@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Cellar } from './cellar';
+import { Cellar } from './Cellar';
 import { sequenceEqual } from 'rxjs/operators';
 
 @Injectable()
@@ -8,11 +8,11 @@ export class CellarService {
   currentId: number = 1;
   allCellars: Cellar[] = [new Cellar("Demo Cellar", this.currentId.toString())];
 
-  getAllCellars() {
-    return this.allCellars;
+  getAllCellars(): Promise<Cellar[]> {
+    return Promise.resolve(this.allCellars);
   }
 
-  getCellarById(id: string){
+  getCellarById(id: string): Promise<Cellar> {
     let i = 0;
     let found = false;
     let cellarWanted: Cellar;
@@ -24,26 +24,30 @@ export class CellarService {
       i++;
     }
     if (found){
-      return cellarWanted;
+      return Promise.resolve(cellarWanted);
     } else {
       throw Error(`The cellar of id = ${id} doesn't exist.`);
     }
   }
 
-  createCellar(cellarName: string) {
-    let id = this.currentId ++;
+  createCellar(cellarName: string){
+    this.currentId ++;
+    let id = this.currentId;
     let myCellar = new Cellar(cellarName, id.toString());
     this.allCellars.push(myCellar);
 
-    return {name:cellarName, id:id.toString()};
+    return Promise.resolve({name:cellarName, id:id.toString()});
   }
 
   createBottle(id: string, bottleName: string, bottleprice: number) {
-    this.getCellarById(id).addBottle(bottleName, bottleprice);
-    return {name: bottleName, price: bottleprice}
+    this.getCellarById(id)
+      .then(cellar => cellar.addBottle(bottleName, bottleprice))
+    return Promise.resolve({name: bottleName, price: bottleprice})
   }
 
   getAllBottlesFromCellarId(id: string){
-    return this.getCellarById(id).getAllBottles();
+    let output = this.getCellarById(id)
+      .then(cellar => cellar.getAllBottles());
+    return Promise.resolve(output);
   }
 }
