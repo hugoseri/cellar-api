@@ -26,7 +26,8 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Repository of a cellar management API made with [Nest](https://github.com/nestjs/nest) framework TypeScript.
+This API will be used by [cellar-app](https://github.com/hugoseri/cellar-app) repository to interact with it and get a graphical interface on an android app.
 
 ## Installation
 
